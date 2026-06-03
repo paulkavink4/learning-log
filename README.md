@@ -563,3 +563,190 @@ readStream.on("data", (chunk) => {
 2. Writable Stream
 3. Duplex Stream
 4. Transform Stream
+
+# Day 3 - OOPs and Express.js Fundamentals
+
+## Overview
+
+This session focused on understanding Object-Oriented Programming (OOP) concepts in JavaScript and core Express.js fundamentals, including routing, middleware, events, route parameters, query parameters, and handling HTTP requests.
+
+---
+
+## Object-Oriented Programming (OOP)
+
+### 1. Encapsulation
+
+Encapsulation is the practice of keeping data and the methods that operate on that data together within a class.
+
+**Key Learnings:**
+
+* Creating classes using the `class` keyword.
+* Using constructors to initialize object properties.
+* Defining methods inside classes.
+* Using private fields (`#`) to restrict direct access to sensitive data.
+
+### 2. Inheritance
+
+Inheritance allows a child class to reuse properties and methods from a parent class.
+
+**Key Learnings:**
+
+* Extending classes using the `extends` keyword.
+* Reusing parent class functionality.
+* Understanding how `super()` invokes the parent constructor.
+
+### 3. Polymorphism
+
+Polymorphism allows the same method name to have different behaviors depending on the object that invokes it.
+
+**Key Learnings:**
+
+* Method overriding.
+* Implementing different behaviors using the same method signature.
+
+### 4. Abstraction
+
+Abstraction hides implementation details and exposes only the necessary functionality.
+
+**Key Learnings:**
+
+* Simplifying complex logic through service classes.
+* Exposing only required methods to consumers.
+
+---
+
+## Express.js Fundamentals
+
+### Creating an Express Server
+
+**Key Learnings:**
+
+* Initializing an Express application.
+* Starting a server using `app.listen()`.
+* Handling HTTP requests and responses.
+
+### Sending Responses
+
+Learned different ways of sending responses:
+
+* `res.send()`
+* `res.status()`
+* `res.sendFile()`
+* `res.redirect()`
+
+---
+
+## Middleware
+
+Middleware functions execute during the request-response cycle.
+
+### Key Learnings
+
+* Creating custom middleware using `app.use()`.
+* Using third-party middleware such as Morgan for request logging.
+* Understanding the purpose of the `next()` function.
+* Middleware execution order and request flow.
+
+---
+
+## Event-Driven Architecture
+
+Node.js follows an event-driven architecture using the Event Emitter pattern.
+
+### Key Learnings
+
+* Creating custom events.
+* Registering event listeners using `.on()`.
+* Triggering events using `.emit()`.
+
+### Event Flow
+
+```text
+Event Emitted
+      ↓
+Listener Receives Event
+      ↓
+Callback Function Executes
+```
+
+---
+
+## Route Parameters
+
+Route parameters allow dynamic values to be passed through URLs.
+
+### Example
+
+```text
+/api/users/:id
+```
+
+### Key Learnings
+
+* Accessing route parameters using `req.params`.
+* Converting string values to numbers.
+* Validating route parameters.
+* Returning appropriate HTTP status codes.
+
+---
+
+## Query Parameters
+
+Query parameters are commonly used for filtering and searching data.
+
+### Example
+
+```text
+/api/users?filter=user_name&value=kavin
+```
+
+### Key Learnings
+
+* Accessing query parameters using `req.query`.
+* Filtering data dynamically based on user input.
+
+---
+
+## Handling POST Requests
+
+POST requests are used to send data from the client to the server.
+
+### Key Learnings
+
+* Parsing JSON requests using `express.json()`.
+* Accessing request payloads through `req.body`.
+* Creating new resources dynamically.
+* Returning `201 Created` responses.
+
+---
+
+## HTTP Status Codes Used
+
+| Status Code | Meaning            |
+| ----------- | ------------------ |
+| 200         | Success            |
+| 201         | Resource Created   |
+| 400         | Bad Request        |
+| 404         | Resource Not Found |
+
+---
+
+## Topics Covered
+
+* OOP Concepts in JavaScript
+
+  * Encapsulation
+  * Inheritance
+  * Polymorphism
+  * Abstraction
+* Express.js Basics
+* Middleware
+* Morgan Logging Middleware
+* Event Emitters
+* Route Parameters
+* Query Parameters
+* GET and POST Requests
+* Request Validation
+* HTTP Status Codes
+* JSON Request Handling
+
