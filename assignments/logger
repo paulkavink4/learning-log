@@ -1,0 +1,57 @@
+const fs = require("fs");
+/*
+fs.appendFileSync("app.log", "[INFO] User Logged in \n");
+fs.appendFileSync("app.log","[ERROR] Payment Failed \n")
+
+//By using individual methods
+function info(message){
+    fs.appendFileSync("app.log",`[INFO] ${message}\n`)
+}
+function error(message){
+    fs.appendFileSync("app.log",`[ERROR] ${message}\n`)
+
+}
+function debug(message){
+    fs.appendFileSync("app.log",`[DEBUG] ${message}\n`)
+
+}
+
+info("User Logged In")
+error("Payment Failed")
+debug("Fetching Menu")
+
+//By using common one method
+
+function writelog(level,message){
+    const time=new Date()
+    fs.appendFileSync("app.log",`${time} [${level}] ${message}`)
+}
+
+writelog("ERROR","Payment Incomplete")
+
+
+//This class is an example for encapsulation
+class Logger {
+  writelog(level, message) {
+    const time = new Date();
+    fs.appendFileSync("app.log", `${time} [${level}] ${message}\n`);
+  }
+
+  info(message) {
+    this.writelog("INFO",message);
+  }
+
+  error(message) {
+    this.writelog("ERROR",message);
+  }
+  debug(message) {
+    this.writelog("DEBUG",message);
+  }
+}
+
+const  logger= new Logger()
+
+logger.info("Kavin Logged In")
+logger.debug("OTP Generated")
+logger.error("Payment Failed")
+*/
