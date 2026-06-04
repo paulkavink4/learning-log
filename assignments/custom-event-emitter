@@ -1,0 +1,100 @@
+const EventEmitter = require("events");
+const eventEmitter = new EventEmitter();
+const readLine = require("readline"); // For getting inputs(String) from backend/console
+const r1 = readLine.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+//Below details updates dynamically
+let user = "";
+let order = "";
+let bill = "";
+
+let tax = 0.2;
+//Generating random single number
+let tabNum = Math.floor(Math.random() * 10);
+//Status indicates is order prepared or not ?
+let status = true;
+
+/**
+ * Giving user options and taking input as numbers
+ */
+console.log("--------------------------");
+console.log("| Choose Option From Below | ");
+console.log("1.Login\n2.Order Food ");
+console.log("--------------------------");
+
+r1.question("Enter a Number: ", (option) => {
+  switch (option) {
+    // For Login, event listen only once will triggered
+    case "1": {
+      //Taking user name , and updating the global varible
+      r1.question("Enter Name: ", (name) => {
+        user = name;
+        //Trigger Emit it will call eventEmitter.once("login") - this exectues only once
+        eventEmitter.emit("login");
+        r1.close();
+      });
+      break;
+    }
+    // Providing users options of food, taking input in numbers and proceed
+    case "2": {
+      console.log(`What you like to order ${user} ?`);
+      console.log("1.Burger\n2.Pizza\n3.Sandwich");
+      // With resprect to option, updating bill and food order
+      r1.question("Enter a Number: ", (option) => {
+        if (option === "1") {
+          order = "Burger";
+          bill = 5;
+        } else if (option === "2") {
+          order = "Pizza";
+          bill = 7;
+        } else if (option === "3") {
+          order = "Sandwich";
+          bill = 4;
+        } else {
+          console.log("Ivalid Option");
+        }
+        eventEmitter.emit("food");
+        r1.close();
+      });
+
+      break;
+    }
+    default:
+      r1.close();
+      break;
+  }
+});
+
+/**
+ * Event Listeners
+ */
+
+//Login Listen Only Once and Execute
+eventEmitter.once("login", () => {
+  console.log(`Welcome, ${user} !`);
+});
+
+//Foood Order Processing
+eventEmitter.on("food", () => {
+  const totalBill = bill + bill * tax;
+  console.log(`Total Bill for your order ${order} is $${totalBill}`);
+  console.log("Payment Successful");
+  console.log(`Your ${order} is Getting Prepared.
+Your Table Number is ${tabNum},wait there, will be served once it is ready !`);
+  //Setting Timer to show like order takes some time
+  setTimeout(() => {
+    eventEmitter.emit(status, order, tabNum);
+  }, 5000);
+});
+
+//Table Processing
+eventEmitter.on(status, (order, tabNum) => {
+  if (status) {
+    console.log(`Order: ${order} is serving on Table ${tabNum}`);
+  } else {
+    console.log(`Order: ${order} is taking usual than longer for preparation`);
+  }
+});
