@@ -750,3 +750,661 @@ POST requests are used to send data from the client to the server.
 * HTTP Status Codes
 * JSON Request Handling
 
+#Day4 - Custom Event Emitter - Restaurant Order Management System
+
+## Overview
+
+This project demonstrates the use of Node.js Event Emitters by simulating a simple restaurant order management system.
+
+The application allows users to:
+
+* Login to the system
+* Place a food order
+* Generate a bill with tax
+* Simulate food preparation
+* Notify customers when their order is ready
+
+The project showcases event-driven programming using Node.js's built-in `EventEmitter` module.
+
+---
+
+## Concepts Covered
+
+### Event Emitters
+
+The application uses custom events to handle different stages of the order lifecycle.
+
+* Event Registration (`.on()`)
+* One-Time Event Listeners (`.once()`)
+* Event Triggering (`.emit()`)
+
+### Asynchronous Operations
+
+* Simulated food preparation using `setTimeout()`
+* Event-based communication between different modules
+
+### User Input Handling
+
+* Reading user input using the `readline` module
+* Processing menu selections dynamically
+
+---
+
+## Events Implemented
+
+### 1. Login Event
+
+Triggered when a user logs in.
+
+```javascript
+eventEmitter.once("login", () => {
+  console.log(`Welcome, ${user}!`);
+});
+```
+
+**Purpose**
+
+* Greets the customer after successful login.
+* Uses `.once()` to ensure the event executes only one time.
+
+---
+
+### 2. Food Order Event
+
+Triggered when a customer selects a food item.
+
+```javascript
+eventEmitter.on("food", () => {
+  // Billing and order processing
+});
+```
+
+**Responsibilities**
+
+* Calculates the total bill.
+* Adds tax to the order amount.
+* Displays payment confirmation.
+* Assigns a table number.
+* Simulates food preparation.
+
+---
+
+### 3. Order Ready Event
+
+Triggered after the food preparation timer completes.
+
+```javascript
+setTimeout(() => {
+  eventEmitter.emit(status, order, tabNum);
+}, 5000);
+```
+
+**Responsibilities**
+
+* Notifies customers when their order is ready.
+* Displays serving information.
+
+---
+
+## Application Flow
+
+```text
+User Starts Application
+          │
+          ▼
+Select Option
+(Login / Order Food)
+          │
+          ▼
+Login Event Triggered
+          │
+          ▼
+Food Selection
+          │
+          ▼
+Food Event Triggered
+          │
+          ▼
+Bill Calculation
+          │
+          ▼
+Payment Confirmation
+          │
+          ▼
+Food Preparation (5 Seconds)
+          │
+          ▼
+Order Ready Event Triggered
+          │
+          ▼
+Food Served to Table
+```
+
+---
+
+## Features
+
+* Event-driven architecture
+* One-time login event listener
+* Dynamic food ordering system
+* Tax calculation
+* Random table allocation
+* Simulated order preparation delay
+* Order status notifications
+
+---
+
+## Technologies Used
+
+* Node.js
+* EventEmitter Module
+* Readline Module
+* JavaScript (ES6)
+
+---
+
+## Sample Output
+
+```text
+--------------------------
+| Choose Option From Below |
+1. Login
+2. Order Food
+--------------------------
+
+Enter a Number: 1
+Enter Name: Kavin
+
+Welcome, Kavin!
+
+Enter a Number: 2
+
+1. Burger
+2. Pizza
+3. Sandwich
+
+Enter a Number: 2
+
+Total Bill for your order Pizza is $8.4
+Payment Successful
+
+Your Pizza is Getting Prepared.
+Your Table Number is 7, wait there, will be served once it is ready!
+
+Order: Pizza is serving on Table 7
+```
+
+---
+
+## Key Learnings
+
+* Understanding Node.js Event Emitters
+* Creating custom events and listeners
+* Using `.on()`, `.once()`, and `.emit()`
+* Event-driven application design
+* Handling asynchronous workflows
+* Managing user input through the command line
+* Simulating real-world business workflows using events
+
+---
+
+## Future Enhancements
+
+* Support multiple orders per customer
+* Store orders in a database
+* Implement order cancellation
+* Add payment methods
+* Generate invoices
+* Build a REST API version using Express.js
+
+# Streams - File Copy Using Readable and Writable Streams
+
+## Overview
+
+This project demonstrates how to use Node.js Streams to efficiently read data from a file and write it to another file without loading the entire file into memory.
+
+The application copies the contents of a source file (`file.pdf`) into a destination file (`copy.txt`) using stream piping.
+
+---
+
+## Concepts Covered
+
+### Streams
+
+Streams allow data to be processed in small chunks instead of loading the entire file into memory.
+
+### Benefits
+
+* Improved performance
+* Reduced memory consumption
+* Efficient handling of large files
+* Faster file transfers
+
+---
+
+## Types of Streams Used
+
+### Readable Stream
+
+Used to read data from a source file.
+
+```javascript
+const readStream = fs.createReadStream("file.pdf");
+```
+
+### Writable Stream
+
+Used to write data into a destination file.
+
+```javascript
+const writeStream = fs.createWriteStream("copy.txt");
+```
+
+---
+
+## Stream Piping
+
+The `pipe()` method automatically transfers data from a Readable Stream to a Writable Stream.
+
+```javascript
+readStream.pipe(writeStream);
+```
+
+### Advantages of Pipe
+
+* Cleaner code
+* Automatic flow control
+* Better memory management
+* Handles backpressure internally
+
+---
+
+## Event Handling
+
+### Data Event
+
+Triggered whenever a chunk of data is received.
+
+```javascript
+readStream.on("data", (chunk) => {
+  console.log(chunk.length);
+});
+```
+
+**Purpose**
+
+* Processes file data chunk by chunk.
+* Displays the size of each buffer received.
+
+---
+
+### End Event
+
+Triggered when the file has been completely read.
+
+```javascript
+readStream.on("end", () => {
+  console.log("File Read Completed");
+});
+```
+
+**Purpose**
+
+* Indicates successful completion of file reading.
+
+---
+
+### Error Event
+
+Triggered when an error occurs during reading or writing.
+
+```javascript
+readStream.on("error", (err) => {
+  console.log(err);
+});
+```
+
+```javascript
+writeStream.on("error", (err) => {
+  console.log(err);
+});
+```
+
+**Purpose**
+
+* Handles file system errors gracefully.
+* Prevents application crashes.
+
+---
+
+### Finish Event
+
+Triggered when all data has been successfully written.
+
+```javascript
+writeStream.on("finish", () => {
+  console.log("File copied Successfully");
+});
+```
+
+**Purpose**
+
+* Confirms successful file copy operation.
+
+---
+
+## Application Flow
+
+```text
+Source File (file.pdf)
+          │
+          ▼
+   Read Stream
+          │
+          ▼
+     Buffer Chunks
+          │
+          ▼
+      pipe()
+          │
+          ▼
+   Write Stream
+          │
+          ▼
+Destination File (copy.txt)
+```
+
+---
+
+## Alternative Approach
+
+Instead of using `pipe()`, data can be manually written chunk by chunk.
+
+```javascript
+readStream.on("data", (chunk) => {
+  writeStream.write(chunk);
+});
+```
+
+However, using `pipe()` is recommended because it automatically manages data flow and backpressure.
+
+---
+
+## Technologies Used
+
+* Node.js
+* File System (fs) Module
+* Readable Streams
+* Writable Streams
+* Stream Events
+
+---
+
+## Sample Output
+
+```text
+Buffer
+65536
+
+Buffer
+65536
+
+Buffer
+32768
+
+File Read Completed
+File copied Successfully
+```
+
+---
+
+## Key Learnings
+
+* Creating Readable and Writable Streams.
+* Processing large files efficiently.
+* Understanding data chunks (buffers).
+* Using `pipe()` for stream-to-stream communication.
+* Handling stream events (`data`, `end`, `error`, `finish`).
+* Implementing memory-efficient file operations in Node.js.
+
+---
+
+## Real-World Use Cases
+
+* File uploads
+* File downloads
+* Video streaming
+* Audio streaming
+* Log processing
+* Data migration
+* Large file transfers
+
+Streams are one of the most important performance optimization features in Node.js and are widely used in production applications.
+
+# Custom Logger Utility Using Node.js
+
+## Overview
+
+This project demonstrates how to build a simple custom logging utility in Node.js using the File System (`fs`) module.
+
+The logger records application events into a log file (`app.log`) with different log levels such as:
+
+* INFO
+* DEBUG
+* ERROR
+
+The implementation evolves from simple file writes to a reusable, object-oriented logging solution using a class.
+
+---
+
+## Concepts Covered
+
+### File System Module (`fs`)
+
+Node.js provides the built-in `fs` module for interacting with the file system.
+
+Used methods:
+
+```javascript
+fs.appendFileSync()
+```
+
+This method appends data to a file and creates the file if it does not already exist.
+
+---
+
+## Basic Logging
+
+Initially, log messages are written directly to the log file.
+
+```javascript
+fs.appendFileSync("app.log", "[INFO] User Logged In\n");
+fs.appendFileSync("app.log", "[ERROR] Payment Failed\n");
+```
+
+### Limitation
+
+* Repetitive code
+* Difficult to maintain
+* No centralized logging logic
+
+---
+
+## Function-Based Logger
+
+To improve reusability, separate functions are created for each log level.
+
+```javascript
+function info(message) {
+  fs.appendFileSync("app.log", `[INFO] ${message}\n`);
+}
+
+function error(message) {
+  fs.appendFileSync("app.log", `[ERROR] ${message}\n`);
+}
+
+function debug(message) {
+  fs.appendFileSync("app.log", `[DEBUG] ${message}\n`);
+}
+```
+
+### Benefits
+
+* Cleaner code
+* Reusable logging functions
+* Better readability
+
+---
+
+## Generic Logging Function
+
+Instead of creating multiple functions, a single reusable function can handle all log levels.
+
+```javascript
+function writeLog(level, message) {
+  const time = new Date();
+
+  fs.appendFileSync(
+    "app.log",
+    `${time} [${level}] ${message}\n`
+  );
+}
+```
+
+### Benefits
+
+* Reduces code duplication
+* Supports dynamic log levels
+* Includes timestamps
+
+---
+
+## Object-Oriented Logger
+
+The final implementation uses a Logger class.
+
+```javascript
+class Logger {
+  writeLog(level, message) {
+    const time = new Date();
+
+    fs.appendFileSync(
+      "app.log",
+      `${time} [${level}] ${message}\n`
+    );
+  }
+
+  info(message) {
+    this.writeLog("INFO", message);
+  }
+
+  error(message) {
+    this.writeLog("ERROR", message);
+  }
+
+  debug(message) {
+    this.writeLog("DEBUG", message);
+  }
+}
+```
+
+---
+
+## Encapsulation
+
+This implementation demonstrates the OOP concept of **Encapsulation**.
+
+### Why?
+
+The logging logic is encapsulated inside the `Logger` class:
+
+* Internal implementation details are hidden.
+* Consumers only use public methods.
+* Changes to logging behavior can be made without affecting application code.
+
+### Example
+
+```javascript
+const logger = new Logger();
+
+logger.info("User Logged In");
+logger.debug("OTP Generated");
+logger.error("Payment Failed");
+```
+
+---
+
+## Application Flow
+
+```text
+Application Event
+        │
+        ▼
+Logger Method Called
+(info/debug/error)
+        │
+        ▼
+writeLog()
+        │
+        ▼
+Timestamp Added
+        │
+        ▼
+Written to app.log
+```
+
+---
+
+## Sample Log Output
+
+```text
+Wed Jun 04 2026 10:15:20 GMT+0530 [INFO] User Logged In
+Wed Jun 04 2026 10:15:25 GMT+0530 [DEBUG] OTP Generated
+Wed Jun 04 2026 10:15:30 GMT+0530 [ERROR] Payment Failed
+```
+
+---
+
+## Features
+
+* Custom logging utility
+* Timestamped logs
+* Multiple log levels
+* Reusable logging methods
+* Object-oriented implementation
+* Centralized logging mechanism
+
+---
+
+## Technologies Used
+
+* Node.js
+* File System (fs) Module
+* JavaScript Classes
+* Object-Oriented Programming (OOP)
+
+---
+
+## Key Learnings
+
+* Working with the Node.js File System module.
+* Writing and appending data to files.
+* Designing reusable utility functions.
+* Implementing logging systems.
+* Applying the OOP concept of Encapsulation.
+* Building maintainable and scalable code structures.
+
+---
+
+## Real-World Use Cases
+
+* API request logging
+* Authentication tracking
+* Error monitoring
+* Application debugging
+* Audit trails
+* Production system monitoring
+
+A custom logger is a foundational component in backend applications and helps developers monitor, debug, and maintain systems effectively.
+
+
