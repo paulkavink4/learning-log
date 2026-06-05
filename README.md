@@ -1407,4 +1407,160 @@ Wed Jun 04 2026 10:15:30 GMT+0530 [ERROR] Payment Failed
 
 A custom logger is a foundational component in backend applications and helps developers monitor, debug, and maintain systems effectively.
 
+# 📘 Day 5 – TypeScript Deep Dive
+
+## 🗂️ Topics Covered
+
+- TypeScript Basics (types, arrays, functions)
+- Interfaces & Object Typing
+- Classes & Constructors
+- Access Modifiers
+- Getters & Setters
+- Abstract Classes
+- Interfaces with Classes
+- Generics
+- Enums
+- Union Types & Type Aliases
+- Optional Properties
+
+---
+
+## 🔑 Key Learnings (Focus Area)
+
+### 🔷 Abstract Classes
+An abstract class **cannot be instantiated directly** — it exists only to be extended.  
+Use it when you want to **force child classes** to implement specific methods.
+
+```typescript
+abstract class Employee {
+  constructor(public name: string) {}
+  abstract calculateSalary(): number;
+  abstract empName(): void;
+}
+
+class Cashier extends Employee {
+  calculateSalary(): number { return 25000; }
+  empName(): void { console.log(`Cashier: ${this.name}`); }
+}
+```
+
+---
+
+### 🔷 Interfaces with Classes (`implements`)
+A class can **implement** one or more interfaces, enforcing a contract.
+
+```typescript
+interface Printable {
+  print(): void;
+}
+
+class Invoice implements Printable {
+  print(): void { console.log("Printing Invoice"); }
+}
+```
+
+---
+
+### 🔷 Generics
+Write **one function or interface** that works with **any type** safely.
+
+```typescript
+function getData<T>(data: T): T { return data; }
+
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+}
+
+const response: ApiResponse<string> = { success: true, data: "Welcome" };
+```
+
+---
+
+### 🔷 Enums
+Restrict a variable to a **fixed set of named values**.
+
+```typescript
+enum FoodStatus { Ordered, Preparing, Served }         // numeric (0,1,2)
+enum DocumentStatus { Draft = "DRAFT", Review = "REVIEW" } // string enum
+```
+
+---
+
+### 🔷 Union Types & Type Aliases
+
+```typescript
+// Union – multiple possible types
+let id: string | number;
+
+// Literal union – only specific values allowed
+type Status = "pending" | "approved" | "rejected";
+
+// Alias for objects
+type MyDocument = { id: string; title: string; pages: number };
+```
+
+---
+
+### 🔷 Optional Properties
+Use `?` to mark a property as **not required**.
+
+```typescript
+interface CreateDocumentRequest {
+  title: string;
+  author: string;
+  description?: string; // optional
+}
+```
+
+---
+
+## 🏋️ Assignments Done
+
+### Restaurant Order Class
+Built a class with `showOrder()` and `calculateGst()` methods using OOP.
+
+### Mini Assignment – Abstract + Interfaces + Generics Combined
+```typescript
+abstract class Employee { abstract calculateSalary(): number }
+interface Login { login(): void }
+interface Logout { logout(): void }
+
+class Cashier extends Employee implements Login, Logout { ... }
+
+const response: ApiResponse<Cashier> = { success: true, data: new Cashier() };
+```
+
+### Final Assignment – Food Order System
+Combined **Enum + Union Type + Interface + Optional Property**:
+
+```typescript
+enum FoodStatus { Ordered, Preparing, Served }
+type OrderId = string | number;
+
+interface Order {
+  id: OrderId;
+  item: string;
+  note?: string;       // optional
+  status: FoodStatus;
+}
+```
+
+---
+
+## 💡 Quick Cheat Sheet
+
+| Concept | Keyword | Use When |
+|---|---|---|
+| Abstract Class | `abstract` | Force child to implement methods |
+| Interface contract | `implements` | Class must follow a shape |
+| Generic | `<T>` | Same logic, any type |
+| Enum | `enum` | Fixed named options |
+| Union | `\|` | Multiple possible types |
+| Optional | `?` | Property not always needed |
+
+---
+
+> **Stack:** TypeScript · Node.js  
+> **Day:** 5 of TypeScript Fundamentals
 
