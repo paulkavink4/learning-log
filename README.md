@@ -1564,3 +1564,192 @@ interface Order {
 > **Stack:** TypeScript · Node.js  
 > **Day:** 5 of TypeScript Fundamentals
 
+# 📘 Day 6 – TypeScript: Classes, Closures & More
+
+## 🗂️ Topics Covered
+
+- Strong Typing & Inferred Typing
+- Duck Typing
+- Arrays & `any` type
+- Enums & Functions
+- Optional & Default Parameters
+- Interfaces
+- Classes & Constructors
+- Inheritance
+- Closures
+- Access Modifiers (`public`, `private`, `protected`)
+- Static Functions & Static Properties
+
+---
+
+## 🔑 Key Learnings (Focus Area – Later Part)
+
+### 🔷 Inheritance (`extends` + `super`)
+Avoid repeating code by having child classes **inherit** from a parent.  
+`super()` calls the parent constructor.
+
+```typescript
+class User {
+  constructor(public firstName: string, public lastName: string, public age: number) {}
+  greet() { return `Hello, ${this.firstName} ${this.lastName}`; }
+}
+
+class AdminUser extends User {
+  constructor(firstName: string, lastName: string, age: number, public role: string) {
+    super(firstName, lastName, age); // calls User's constructor
+  }
+  manageUser() { return `Managing Users with role: ${this.role}`; }
+}
+
+const admin = new AdminUser("John", "Doe", 25, "Manager");
+console.log(admin.greet());       // inherited from User
+console.log(admin.manageUser()); // AdminUser's own method
+```
+
+---
+
+### 🔷 Closures
+A closure **encapsulates** its own state — solves the global variable pollution problem.  
+Each call to `createCounter()` creates an **independent** counter.
+
+```typescript
+// ❌ Without Closure — global state, risky
+let counterValue = 0;
+function increment() { counterValue++; }
+
+// ✅ With Closure — private, isolated state
+function createCounter() {
+  let counterValue = 0;
+  return {
+    increment: () => counterValue++,
+    getValue: () => counterValue
+  };
+}
+
+const counter1 = createCounter();
+const counter2 = createCounter();
+
+counter1.increment();
+counter2.increment();
+counter2.increment();
+
+console.log(counter1.getValue()); // 1
+console.log(counter2.getValue()); // 2
+```
+
+> **Why it matters:** Closures are everywhere in real JS/TS — callbacks, event handlers, factory functions.
+
+---
+
+### 🔷 Access Modifiers
+
+| Modifier | Accessible From |
+|---|---|
+| `public` | Anywhere (default) |
+| `private` | Only inside the class |
+| `protected` | Inside class + child classes |
+
+```typescript
+class User {
+  private name: string;
+  private age: number;
+
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+  }
+
+  public getName(): string { return this.name; }
+
+  setAge(age: number): void {
+    if (age > 0 && age < 100) this.age = age; // validation guard
+  }
+}
+
+const user = new User("Kavin", 25);
+// user.name = "Suresh" ❌ Error — private!
+console.log(user.getName()); // ✅
+```
+
+---
+
+### 🔷 Static Functions
+`static` methods belong to the **class itself**, not instances.  
+Useful for **utility functions** — no need to create an object to call them.
+
+```typescript
+class User {
+  constructor(public name: string, public age: number) {}
+
+  static isAdult(age: number): boolean {
+    return age >= 18;
+  }
+}
+
+console.log(User.isAdult(30)); // ✅ called on class, not instance
+```
+
+---
+
+### 🔷 Static Properties ⭐ (Final Topic)
+Static properties are **shared across all instances** of a class.  
+Keeps related data **inside** the class — avoids tight coupling with global variables.
+
+```typescript
+// ❌ Without static — tight coupling, error-prone
+let totalUsers = 0;
+function createUser(name: string) {
+  totalUsers++; // what if an error happens after this line?
+  return new User(name);
+}
+
+// ✅ With static — clean and self-contained
+class User {
+  name: string;
+  static totalUsers: number = 0;
+
+  constructor(name: string) {
+    this.name = name;
+    User.totalUsers++; // increments only when object is created
+  }
+
+  getName(): string { return this.name; }
+
+  static getTotalUser(): number { return User.totalUsers; }
+}
+
+console.log("Users at Start:", User.getTotalUser()); // 0
+
+const user1 = new User("Alice");
+const user2 = new User("Bob");
+
+console.log("Users at End:", User.getTotalUser()); // 2
+```
+
+---
+
+## 💡 Quick Cheat Sheet
+
+| Concept | Keyword | Use When |
+|---|---|---|
+| Inheritance | `extends` + `super` | Child class reuses parent logic |
+| Closure | `function` returning `{}` | Isolate state, avoid globals |
+| Private field | `private` | Hide internal data |
+| Utility method | `static` | No instance needed to call it |
+| Shared counter | `static property` | Track class-level data |
+
+---
+
+## 🧠 Today's Summary
+
+Today was all about writing **better, safer, more organized classes** in TypeScript.
+
+- **Inheritance** taught you how to reuse parent class logic without copy-pasting code.
+- **Closures** showed how to keep state private without polluting global scope.
+- **Access Modifiers** (`private`, `public`) gave you control over what's exposed and what's hidden.
+- **Static functions** let you write utility methods that don't need object creation.
+- **Static properties** solved the tight-coupling problem — keeping class-related data *inside* the class where it belongs.
+
+> **Stack:** TypeScript · Node.js  
+> **Day:** 6 of TypeScript Fundamentals
+
