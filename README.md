@@ -1753,3 +1753,177 @@ Today was all about writing **better, safer, more organized classes** in TypeScr
 > **Stack:** TypeScript · Node.js  
 > **Day:** 6 of TypeScript Fundamentals
 
+# 📘 Day 7 – TypeScript: Generics, Type System & Express REST API
+
+## 🗂️ Topics Covered
+
+- Generic Classes
+- Type Casting (`as`)
+- JSON vs JavaScript Object
+- Type Assertion
+- Intersection Types (`&`)
+- **Mini Project: Express REST API with TypeScript** (MVC Architecture)
+
+---
+
+## 🔑 Key Learnings
+
+### 🔷 Generic Classes
+Eliminate code duplication by writing one class that works with **any type**.
+
+```typescript
+// ❌ Before — duplicate classes
+class NumberStack { private items: number[] = [] ... }
+class StringStack { private items: string[] = [] ... }
+
+// ✅ After — one generic class
+class Stack<T> {
+  private items: T[] = [];
+  push(item: T) { this.items.push(item); }
+  pop() { return this.items.pop(); }
+}
+
+const numStack = new Stack<number>();
+const stringStack = new Stack<string>();
+```
+
+---
+
+### 🔷 Type Casting (`as`)
+When TypeScript can't determine the type automatically, you tell it what the type is.
+
+```typescript
+const jsonData = `{"name":"John","age":30}`;
+const user = JSON.parse(jsonData) as User; // cast to User interface
+console.log(user.name);
+```
+
+---
+
+### 🔷 JSON vs JavaScript Object
+
+| Feature | JSON | JS Object |
+|---|---|---|
+| Keys | Must use `"double quotes"` | Can be unquoted |
+| Functions | ❌ Not allowed | ✅ Allowed |
+| Comments | ❌ Not allowed | ✅ Allowed |
+| Use Case | Data transmission | In-code data handling |
+| Parse | `JSON.parse()` | Direct usage |
+
+---
+
+### 🔷 Type Assertion
+Fix situations where TypeScript infers a **too-general** type.
+
+```typescript
+// ❌ TypeScript sees this as HTMLElement — no .value property
+const element = document.getElementById("myElement");
+
+// ✅ Assert the specific type
+const element = document.getElementById("myElement") as HTMLInputElement;
+element.value; // now works!
+```
+
+---
+
+### 🔷 Intersection Types (`&`)
+Combine **multiple interfaces** into one type — must satisfy all of them.
+
+```typescript
+interface Employee { name: string; id: number; }
+interface Admin { isAdmin: boolean; accessLevel: number; }
+
+type AdminEmployee = Employee & Admin; // must have ALL fields
+
+const adminEmp: AdminEmployee = {
+  name: "Alice", id: 3034,
+  isAdmin: true, accessLevel: 2
+};
+```
+
+> **Union `|`** → either one type OR another  
+> **Intersection `&`** → must satisfy ALL types
+
+---
+
+## 🏗️ Mini Project – Express REST API (MVC Architecture)
+
+Built a full **Document Management REST API** with proper folder structure:
+
+```
+📁 project/
+├── app.ts                        ← Entry point, route definitions
+├── 📁 controllers/
+│   └── document.controller.ts   ← Handles req/res logic
+├── 📁 services/
+│   └── document.service.ts      ← Business logic & in-memory data
+└── 📁 interface/
+    └── document.interface.ts    ← Type definitions
+```
+
+### API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/` | Health check |
+| GET | `/document` | Single doc with ApiResponse wrapper |
+| GET | `/documents` | All documents |
+| GET | `/documents/:id` | Get document by ID |
+| POST | `/create` | Create new document |
+
+### Interfaces Used
+
+```typescript
+interface MyDocument { id: string; title: string; pages: number; }
+interface ApiResponse<T> { success: boolean; data: T; }
+interface CreateDocumentRequest { title: string; pages: number; }
+```
+
+### Service Layer (Business Logic)
+
+```typescript
+export const fetchAllDocuments = (): MyDocument[] => documents;
+
+export const fetchDocumentById = (id: string): MyDocument | undefined =>
+  documents.find((e) => e.id === id);
+
+export const createDocument = (title: string, pages: number): MyDocument => {
+  const newDoc: MyDocument = { id: `D0${documents.length + 1}`, title, pages };
+  documents.push(newDoc);
+  return newDoc;
+};
+```
+
+### Controller Layer (Request Handling)
+
+```typescript
+export const getById = (req: Request, res: Response): void => {
+  const doc = fetchDocumentById(req.params.id);
+  if (doc) res.json({ success: true, data: doc });
+  else res.status(404).json({ success: false, data: "Document not found" });
+};
+```
+
+---
+
+## 💡 Quick Cheat Sheet
+
+| Concept | Syntax | Use When |
+|---|---|---|
+| Generic Class | `class Stack<T>` | Same logic, multiple types |
+| Type Cast | `value as Type` | TypeScript can't infer type |
+| Type Assertion | `element as HTMLInputElement` | DOM elements, JSON.parse |
+| Intersection | `TypeA & TypeB` | Combine multiple interfaces |
+| MVC Split | controller / service / interface | Organized, scalable API |
+
+---
+
+## 🧠 Today's Summary
+
+- **Generics in Classes** — wrote one `Stack<T>` instead of separate `NumberStack` and `StringStack`.
+- **Type Casting & Assertion** — used `as` to guide TypeScript when it infers too broadly.
+- **Intersection Types** — combined `Employee & Admin` into one type that satisfies both.
+- **Built a real Express REST API** in TypeScript using MVC architecture — interfaces, services, and controllers all separated cleanly.
+
+> **Stack:** TypeScript · Node.js · Express.js  
+> **Day:** 7 of TypeScript Fundamentals
