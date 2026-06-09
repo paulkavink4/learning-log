@@ -1533,7 +1533,7 @@ const response: ApiResponse<Cashier> = { success: true, data: new Cashier() };
 
 ### Final Assignment – Food Order System
 Combined **Enum + Union Type + Interface + Optional Property**:
-
+9108s
 ```typescript
 enum FoodStatus { Ordered, Preparing, Served }
 type OrderId = string | number;
@@ -1924,6 +1924,8 @@ export const getById = (req: Request, res: Response): void => {
 - **Type Casting & Assertion** — used `as` to guide TypeScript when it infers too broadly.
 - **Intersection Types** — combined `Employee & Admin` into one type that satisfies both.
 - **Built a real Express REST API** in TypeScript using MVC architecture — interfaces, services, and controllers all separated cleanly.
+
+- Reference: https://www.youtube.com/watch?v=jrFZkfDmq2I&t=9108s
 
 > **Stack:** TypeScript · Node.js · Express.js  
 > **Day:** 7 of TypeScript Fundamentals
