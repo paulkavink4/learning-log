@@ -1929,3 +1929,188 @@ export const getById = (req: Request, res: Response): void => {
 
 > **Stack:** TypeScript · Node.js · Express.js  
 > **Day:** 7 of TypeScript Fundamentals
+
+**Day 8**
+
+# Simple JWT Auth API (TypeScript + Express)
+
+This project is a minimal **TypeScript** + **Express** API that demonstrates how to implement login and protect routes using **JWT (JSON Web Tokens)**. [github](https://github.com/adcostanza/express-typescript-auth-jwt)
+
+It uses a hardcoded user and an in‑memory list of “secret documents” to make the core authentication flow easy to understand.
+
+***
+
+## Features
+
+- Login endpoint that returns a signed JWT token on successful authentication. [github](https://github.com/juffalow/express-jwt-example)
+- JWT verification middleware that checks `Authorization: Bearer <token>` on protected routes. [npmjs](https://www.npmjs.com/package/express-bearer-token)
+- Protected `/documents` endpoint that only works with a valid token. [jasonwatmore](https://jasonwatmore.com/nodejs-jwt-authentication-tutorial-with-example-api)
+- Written in TypeScript with typed `Request`, `Response`, and `NextFunction`. [dev](https://dev.to/juliecherner/authentication-with-jwt-tokens-in-typescript-with-express-3gb1)
+
+***
+
+## Project Structure
+
+```text
+src/
+  app.ts                 # Express app setup and route mounting
+  controllers/
+    auth.controller.ts   # Login handler + secret documents handler
+  routes/
+    auth.routes.ts       # Auth routes (login, documents)
+  middleware/
+    auth.middleware.ts   # verifyToken middleware for JWT
+```
+
+### `app.ts`
+
+- Creates an Express app and starts the server on port `5000`.  
+- Adds the `/health` route to quickly check if the server is running.  
+- Uses `express.json()` so that `req.body` is available for JSON requests.  
+- Mounts the auth routes under `/auth` (and optionally `/` if you keep that line).
+
+Key ideas you can remember:
+
+- Always call `app.use(express.json())` **before** defining routes.  
+- Mounting `authRoutes` at `/auth` means the login route becomes `/auth/login`.
+
+### `auth.controller.ts`
+
+Defines two main handlers:
+
+1. `login`  
+   - Expects `email` and `password` in `req.body`.  
+   - For learning, it uses a hardcoded user:  
+     - Email: `kavin@gmail.com`  
+     - Password: `1234`  
+   - If the credentials match, it creates a JWT with:
+     - Payload: `{ id: "1", email }`  
+     - Secret: `"secretKey"`  
+     - Expires in: `"1hr"`  
+   - Returns JSON:  
+     ```json
+     {
+       "sucess": true,
+       "token": "<jwt-token>"
+     }
+     ```
+
+2. `getSecretDocuments`  
+   - Returns an in‑memory array of document objects (`id`, `title`, `pages`).  
+   - This route is **protected** using the `verifyToken` middleware.
+
+### `auth.routes.ts`
+
+- Creates an Express router and registers two routes:  
+  - `POST /login` → `login` controller  
+  - `GET /documents` → `verifyToken` middleware → `getSecretDocuments` controller  
+- Exported as the default router and mounted in `app.ts`.
+
+### `auth.middleware.ts`
+
+Implements the `verifyToken` middleware:
+
+- Reads the `Authorization` header from the incoming request. [facebook](https://www.facebook.com/groups/ReactJsDevelopersGroup/posts/3073288592845355/)
+- Expects the header format:  
+  `Authorization: Bearer <token>`  
+- Steps:
+  1. Check if `Authorization` header exists.  
+  2. If it exists, split by space and take the second part as the token.  
+  3. Call `jwt.verify(token, "secretKey")`.  
+  4. If verification passes → call `next()` to go to the next handler.  
+  5. If verification fails → send a `401` response with `"Invalid Token"`.  
+  6. If header is missing → send a `404` (or better, `401`) with `"Token Missing"`.
+
+This is the crucial piece that makes `/documents` accessible only with a valid token.
+
+***
+
+## How to Run the Project
+
+1. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+2. **Build (if needed) and run in development**
+
+   Example (depending on your scripts):
+
+   ```bash
+   npm run dev
+   ```
+
+3. The server listens on:
+
+   - `http://localhost:5000`
+
+***
+
+## Testing the Endpoints
+
+### 1. Health Check
+
+- Method: `GET`  
+- URL: `http://localhost:5000/health`  
+- Response: `"Working"` (plain text)
+
+Use this to confirm the server is running.
+
+### 2. Login (Get JWT Token)
+
+- Method: `POST`  
+- URL: `http://localhost:5000/auth/login`  
+- Headers:  
+  - `Content-Type: application/json`  
+- Body (JSON):
+
+  ```json
+  {
+    "email": "kavin@gmail.com",
+    "password": 1234
+  }
+  ```
+
+- Expected success response (example):
+
+  ```json
+  {
+    "sucess": true,
+    "token": "<your-jwt-token>"
+  }
+  ```
+
+Copy the `token` value for the next step.
+
+### 3. Access Protected Documents
+
+- Method: `GET`  
+- URL: `http://localhost:5000/auth/documents`  
+- Headers:  
+  - `Authorization: Bearer <your-jwt-token>`  
+
+If the token is valid, you should get:
+
+```json
+[
+  {
+    "id": "D001",
+    "title": "Introduction to Webtechnologies",
+    "pages": 150
+  },
+  {
+    "id": "D002",
+    "title": "Node JS Fundamentals",
+    "pages": 200
+  }
+]
+```
+
+If something is wrong, you might see:
+
+- `401` with `{ "message": "Ivalid Token" }` (invalid or expired token)  
+- `404` with `{ "message": "Token Missing" }` (no `Authorization` header)
+
+***
+
